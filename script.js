@@ -1,39 +1,63 @@
-//let playerChoice = prompt("Choose your weapon", "");
-//let playerHand = playerChoice.toLowerCase();
-//console.log("Player played: " + playerHand);
+let computerScore = 0;
+let playerScore = 0;
+const computerWinsParent = document.querySelector(".computer-score");
+let computerScoreText = document.createElement("p");
+const playerWinsParent = document.querySelector(".player-score");
+let playerScoreText = document.createElement("p");
 
-function computerPlay() {
+computerWinsParent.appendChild(computerScoreText);
+playerWinsParent.appendChild(playerScoreText);
+
+const buttons = Array.from(document.querySelectorAll("button"));
+buttons.forEach((button) =>
+  button.addEventListener("click", function (e) {
+    const playerChoice = e.target.dataset.choice;
+    console.log("Player chooses: " + playerChoice);
+    computerPlay(playerChoice);
+  })
+);
+
+function computerPlay(player) {
   let choiceNum = Math.random();
   console.log(choiceNum);
   let computerChoice;
   if (choiceNum <= 0.33) computerChoice = "rock";
   else if (choiceNum > 0.33 && choiceNum <= 0.66) computerChoice = "paper";
   else computerChoice = "scissors";
-  return computerChoice;
+  playRound(computerChoice, player);
 }
 
-function playRound(computerHand) {
-  let playerChoice = prompt("Choose your weapon", "");
-  let playerHand = playerChoice.toLowerCase();
-  console.log(computerHand + playerHand);
+function playRound(computerHand, playerHand) {
+  console.log("Computer chooses: " + computerHand);
   if (computerHand === playerHand) console.log("It's a tie");
-  else if (computerHand === "rock" && playerHand === "scissors")
-    console.log("Computer Wins " + computerHand + " Beats " + playerHand);
-  else if (computerHand === "rock" && playerHand === "paper")
-    console.log("player Wins " + playerHand + " Beats " + computerHand);
-  else if (computerHand === "paper" && playerHand === "rock")
-    console.log("Computer Wins " + computerHand + " Beats " + playerHand);
-  else if (computerHand === "paper" && playerHand === "scissors")
-    console.log("player Wins " + playerHand + " Beats " + computerHand);
-  else if (computerHand === "scissors" && playerHand === "paper")
-    console.log("Computer Wins " + computerHand + " Beats " + playerHand);
-  else if (computerHand === "scissors" && playerHand === "rock")
-    console.log("player Wins " + playerHand + " Beats " + computerHand);
+  else if (
+    (computerHand === "rock" && playerHand === "scissors") ||
+    (computerHand === "paper" && playerHand === "rock") ||
+    (computerHand === "scissors" && playerHand === "paper")
+  ) {
+    ++computerScore;
+    updateScore(computerScore, playerScore);
+    gameOverCheck(computerScore);
+  } else if (
+    (computerHand === "rock" && playerHand === "paper") ||
+    (computerHand === "paper" && playerHand === "scissors") ||
+    (computerHand === "scissors" && playerHand === "rock")
+  ) {
+    ++playerScore;
+    updateScore(computerScore, playerScore);
+    gameOverCheck(playerScore);
+  }
 }
 
-//playRound(computerPlay(), playerHand);
+function updateScore(computer, player) {
+  computerScoreText.textContent = computer;
+  playerScoreText.textContent = player;
+}
 
-for (let i = 0; i <= 4; i++) {
-  console.log("Round " + i);
-  playRound(computerPlay());
+function gameOverCheck(score) {
+  if (score === 5) gameOver();
+}
+
+function gameOver() {
+  alert("Game Over");
 }
